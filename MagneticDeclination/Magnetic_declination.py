@@ -27,9 +27,19 @@ __date__ = '2023-12-01'
 __copyright__ = '(C) 2015, Aldo Scorza'
 
 
-from qgis.PyQt.QtCore import QObject, QSettings, QVariant, QCoreApplication
-from qgis.PyQt.QtWidgets import QDialog, QAction, QColorDialog, QMessageBox
-from qgis.PyQt.QtGui import QIcon, QColor
+from qgis.PyQt.QtCore import QObject, QSettings, QCoreApplication, QTranslator, qVersion
+try:
+    # QVariant type constants are used by Qt 5 / QGIS 3.
+    from qgis.PyQt.QtCore import QVariant
+    FIELD_DOUBLE = QVariant.Double
+    FIELD_STRING = QVariant.String
+except (ImportError, AttributeError):
+    # Qt 6 / QGIS 4 represents field types with QMetaType.
+    from qgis.PyQt.QtCore import QMetaType
+    FIELD_DOUBLE = QMetaType.Type.Double
+    FIELD_STRING = QMetaType.Type.QString
+from qgis.PyQt.QtWidgets import QDialog, QColorDialog, QMessageBox
+from qgis.PyQt.QtGui import QAction, QIcon, QColor
 # Initialize Qt resources from file resources.py
 from . import resources
 import traceback
@@ -263,7 +273,9 @@ class MagneticDeclination(QObject):
 
 
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        # QDialog.exec_() was removed from Qt 6; retain support for Qt 5.
+        exec_dialog = getattr(self.dlg, 'exec', None) or self.dlg.exec_
+        result = exec_dialog()
         # See if OK was pressed
         if result:
             pass
@@ -338,11 +350,10 @@ class MagneticDeclination(QObject):
           return MagneticDeclination.date_Error(self)
         self.Rdate = date(simple_year,simple_month,simple_day)
         #
-        if simple_year == 2019:
-            yearStart = 2018
-        else:
-            yearStart = simple_year
-        yearEnd = yearStart + 1
+        # Use calendar-year endpoints so the 2029 rate calculation ends at
+        # WMM2025's valid boundary, 2030.0, rather than extrapolating past it.
+        yearStart = simple_year
+        yearEnd = simple_year + 1
         if simple_DateOptions == 1:
             self.Rdate2 = simple_year
         else:
@@ -375,8 +386,8 @@ class MagneticDeclination(QObject):
         #
         #TYPE BASED CALCULATION
         self.Rdeclination = geomag.declination(float(self.simple_latitude), float(self.simple_longitude), float(simple_Cheight), date(simple_year,simple_month,simple_day))
-        Sdeclination = geomag.declination(float(self.simple_latitude), float(self.simple_longitude), float(simple_Cheight), date(yearStart,simple_month,simple_day))
-        Edeclination = geomag.declination(float(self.simple_latitude), float(self.simple_longitude), float(simple_Cheight), date(yearEnd,simple_month,simple_day))
+        Sdeclination = geomag.declination(float(self.simple_latitude), float(self.simple_longitude), float(simple_Cheight), date(yearStart,1,1))
+        Edeclination = geomag.declination(float(self.simple_latitude), float(self.simple_longitude), float(simple_Cheight), date(yearEnd,1,1))
         #
         if self.Rdeclination > 0:
             self.Rdirection = "E"
@@ -423,7 +434,7 @@ class MagneticDeclination(QObject):
         self.pointEmitter.canvasClicked.connect(self.simple_Point)
         self.iface.mapCanvas().setMapTool( self.pointEmitter )
         self.dlg.hide()
-        self.iface.messageBar().pushMessage("", "Waiting for COORDINATES", level=1,)
+        self.iface.messageBar().pushMessage("Waiting for COORDINATES", Qgis.MessageLevel.Info)
 
 
     def simple_Point(self, point, button):
@@ -464,11 +475,11 @@ class MagneticDeclination(QObject):
                 self.rubberGhost2 = QgsRubberBand(self.iface.mapCanvas(), geometryType=3)
                 self.rubberGhost3 = QgsRubberBand(self.iface.mapCanvas(), geometryType=3)
             else:
-                self.rubberCenter = QgsRubberBand(self.iface.mapCanvas(), geometryType=QgsWkbTypes.GeometryType.Line)
-                self.rubberRadius = QgsRubberBand(self.iface.mapCanvas(), geometryType=QgsWkbTypes.GeometryType.Polygon)
-                self.rubberGhost1 = QgsRubberBand(self.iface.mapCanvas(), geometryType=QgsWkbTypes.GeometryType.Polygon)
-                self.rubberGhost2 = QgsRubberBand(self.iface.mapCanvas(), geometryType=QgsWkbTypes.GeometryType.Polygon)
-                self.rubberGhost3 = QgsRubberBand(self.iface.mapCanvas(), geometryType=QgsWkbTypes.GeometryType.Polygon)
+                self.rubberCenter = QgsRubberBand(self.iface.mapCanvas(), geometryType=Qgis.GeometryType.Line)
+                self.rubberRadius = QgsRubberBand(self.iface.mapCanvas(), geometryType=Qgis.GeometryType.Polygon)
+                self.rubberGhost1 = QgsRubberBand(self.iface.mapCanvas(), geometryType=Qgis.GeometryType.Polygon)
+                self.rubberGhost2 = QgsRubberBand(self.iface.mapCanvas(), geometryType=Qgis.GeometryType.Polygon)
+                self.rubberGhost3 = QgsRubberBand(self.iface.mapCanvas(), geometryType=Qgis.GeometryType.Polygon)
              
             self.rubberCenter.setIconSize(10)
             self.rubberRadius.setWidth(5)
@@ -488,7 +499,7 @@ class MagneticDeclination(QObject):
             #
             self.iface.mapCanvas().xyCoordinates.connect(self.simple_Scale)
             self.dlg.hide()
-            self.iface.messageBar().pushMessage("", "Waiting for SCALE setting", level=1,)
+            self.iface.messageBar().pushMessage("Waiting for SCALE setting", Qgis.MessageLevel.Info)
 
 
     def simple_Scale(self, point):
@@ -536,14 +547,14 @@ class MagneticDeclination(QObject):
         pointLayer.startEditing()
         layerData = pointLayer.dataProvider() 
         layerData.addAttributes([
-            QgsField("Lon WGS84", QVariant.Double),
-            QgsField("Lat WGS84", QVariant.Double),
-            QgsField("Epoch", QVariant.String),
-            QgsField("h Unit", QVariant.String),
-            QgsField("h WGS84", QVariant.Double),
-            QgsField("Declinatio", QVariant.Double),
-            QgsField("Annual", QVariant.Double),
-            QgsField("value", QVariant.String)
+            QgsField("Lon WGS84", FIELD_DOUBLE),
+            QgsField("Lat WGS84", FIELD_DOUBLE),
+            QgsField("Epoch", FIELD_STRING),
+            QgsField("h Unit", FIELD_STRING),
+            QgsField("h WGS84", FIELD_DOUBLE),
+            QgsField("Declinatio", FIELD_DOUBLE),
+            QgsField("Annual", FIELD_DOUBLE),
+            QgsField("value", FIELD_STRING)
             ])
         pointLayer.commitChanges()
         #
@@ -590,7 +601,8 @@ class MagneticDeclination(QObject):
         #
         #settings.drawLabels = True
         pal_layer.fieldName="value"
-        pal_layer.placement=QgsPalLayerSettings.OverPoint
+        #pal_layer.placement=QgsPalLayerSettings.OverPoint #causes error. obsolete!
+        pal_layer.placement = QgsPalLayerSettings.Placement.OverPoint
         pc.setProperty(pal_layer.Family,"Arial Black")
         pc.setProperty(pal_layer.Color, QColor(self.red, self.green, self.blue))
         pc.setProperty(pal_layer.FontSizeUnit, "MapUnit")

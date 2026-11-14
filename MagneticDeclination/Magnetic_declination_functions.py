@@ -19,7 +19,7 @@
  ***************************************************************************/
 """
 from datetime import date
-from MagneticDeclination.geomag.geomag import GeoMag
+from .geomag.geomag import GeoMag
 from qgis.core import (
     QgsCoordinateReferenceSystem,
     QgsCoordinateTransform,

@@ -22,7 +22,9 @@ class GeoMag:
 
     def GeoMag(self, dlat, dlon, h=0, time=date.today()): # latitude (decimal degrees), longitude (decimal degrees), altitude (feet), date
         #time = date('Y') + date('z')/365
-        time = time.year+((time - date(time.year,1,1)).days/365.0)
+        year_start = date(time.year, 1, 1)
+        year_length = (date(time.year + 1, 1, 1) - year_start).days
+        time = time.year + ((time - year_start).days / float(year_length))
         alt = h/3280.8399
 
         otime = oalt = olat = olon = -1000.0

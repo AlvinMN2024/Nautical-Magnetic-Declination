@@ -32,7 +32,8 @@ https://github.com/cmweiss/geomag
 (Adapted from the geomagc software and World Magnetic Model of the NOAA Satellite and Information Service, National Geophysical Data Center
 http://www.ngdc.noaa.gov/geomag/WMM/)
 
-Model values by NCEI Geomagnetic Modeling Team and British Geological Survey. 2019. World Magnetic Model 2020. NOAA National Centers for Environmental Information.
-doi: 10.25921/11v3-da71 (https://doi.org/10.25921/11v3-da71), 2020, [date accessed]
+Model values by NOAA NCEI Geomagnetic Modeling Team and British Geological Survey. 2024. World Magnetic Model 2025. NOAA National Centers for Environmental Information.
+doi: 10.25921/aqfd-sd83 (https://doi.org/10.25921/aqfd-sd83), accessed 2026-11-12.
+The WMM2025 coefficient values are U.S. Government material and are not subject to copyright protection in the United States.
 
 Support me on Ko-fi (https://ko-fi.com/magneticdeclination)

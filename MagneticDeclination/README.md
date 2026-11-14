@@ -1,5 +1,12 @@
 # Magnetic-Declination
 QGIS plugin
+
+## Community-maintained fork
+
+This working fork is based on Magnetic Declination 2.4.4 by Aldo Scorza and is
+being updated for QGIS 3.x and QGIS 4.x. The original attribution and GPL-2.0
+license are preserved. Compatibility updates are in progress and need to be
+checked in both QGIS generations before a release.
 ```
 begin                : 2015-04-08
 copyright            : (C) 2015 by Aldo Scorza
@@ -22,8 +29,9 @@ https://github.com/cmweiss/geomag
 (Adapted from the geomagc software and World Magnetic Model of the NOAA Satellite and Information Service, National Geophysical Data Center
 http://www.ngdc.noaa.gov/geomag/WMM/)
 
-Model values by NCEI Geomagnetic Modeling Team and British Geological Survey. 2019. World Magnetic Model 2020. NOAA National Centers for Environmental Information.
-doi: 10.25921/11v3-da71 (https://doi.org/10.25921/11v3-da71), 2020, [date accessed]
+Model values by NOAA NCEI Geomagnetic Modeling Team and British Geological Survey. 2024. World Magnetic Model 2025. NOAA National Centers for Environmental Information.
+doi: 10.25921/aqfd-sd83 (https://doi.org/10.25921/aqfd-sd83), accessed 2026-11-12.
+The WMM2025 coefficient values are U.S. Government material and are not subject to copyright protection in the United States.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O5O7RSF7M)
 
