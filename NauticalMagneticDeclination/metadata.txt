@@ -9,12 +9,11 @@ qgisMinimumVersion=4.0
 qgisMaximumVersion=4.99
 description=Calculates magnetic declination, converts between true and magnetic headings, and creates compass roses.
 about=Uses the 2025–2030 World Magnetic Model from NOAA NCEI and the British Geological Survey.
-version=2.5.0-dev
+version=2.5.0
 author=Aldo Scorza
 maintainer=Alvin M. Natividad
 
-changelog=
-    2.5.0-dev WMM2025 coefficients (2025-2030); Qt 6 compatibility work; annual variation uses calendar-year endpoints; community fork of Aldo Scorza's plugin
+changelog=2.5.0 WMM2025 coefficients (2025-2030); Qt 6 compatibility work; annual variation uses calendar-year endpoints; community fork of Aldo Scorza's plugin
     2.4.4 Fix QgsRubberBand error (many thanks to Chris Lyon https://github.com/Flushot); preserved compatibility between QGIS versions after API changes (rubberband geometry type); added a function in the Expression editor to retrieve the magnetic declination of the center point of a map in a print layout (many thanks to Matthew Cengia https://github.com/mattcen); UI fixes
     2.3.1 Update WMM2020 (2020-2025) coefficients, update attribution, minor UI changes
     2.0.1 Minor fixes
