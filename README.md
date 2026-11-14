@@ -1,32 +1,21 @@
-# Magnetic-Declination
-QGIS plugin
-```
-begin                : 2015-04-08
-copyright            : (C) 2015 by Aldo Scorza
-email                : hacked dot crew at gmail dot com
-```
-```
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or   
-(at your option) any later version.
-```
-Calculates the magnetic heading from a true geographic heading and vice versa.
-Impress on map a Nautical Compass Rose (conformal) with obtained values.
+# Nautical Magnetic Declination
 
-A function in the Expression editor retrieve the the magnetic declination of center-point of a given map within a print layout (many thanks to Matthew Cengia https://github.com/mattcen)
+A QGIS plugin for hydrographers and nautical chart makers. It calculates magnetic declination, converts between true and magnetic headings, and creates compass roses for maps.
 
-Use "geomag package"
-by Christopher Weiss 
-https://github.com/cmweiss/geomag
-(Adapted from the geomagc software and World Magnetic Model of the NOAA Satellite and Information Service, National Geophysical Data Center
-http://www.ngdc.noaa.gov/geomag/WMM/)
+This community-maintained fork is based on Aldo Scorza's original **Magnetic Declination** plugin.
 
-Model values by NCEI Geomagnetic Modeling Team and British Geological Survey. 2019. World Magnetic Model 2020. NOAA National Centers for Environmental Information.
-doi: 10.25921/11v3-da71 (https://doi.org/10.25921/11v3-da71), 2020, [date accessed]
+## Magnetic model
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O5O7RSF7M)
+The plugin uses the World Magnetic Model 2025 (WMM2025), whose coefficients cover 2025–2030. The model is produced by NOAA's National Centers for Environmental Information and the British Geological Survey.
 
-__author__ = 'Aldo Scorza'
-__date__ = '2023-11-30'
-__copyright__ = '(C) 2015, Aldo Scorza'
+## QGIS compatibility
+
+This fork targets QGIS 4.x and was tested with QGIS 4.2.3. The plugin metadata advertises compatibility through QGIS 4.x; later QGIS releases should be checked as they become available.
+
+## Maintainer
+
+Maintained by Alvin M. Natividad. For questions or bug reports, please use the [GitHub issue tracker](https://github.com/AlvinMN2024/Nautical-Magnetic-Declination/issues).
+
+## Credits and license
+
+Original plugin by Aldo Scorza (Hacked-Crew). See [LICENSE](LICENSE) for license terms.
